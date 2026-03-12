@@ -1,17 +1,17 @@
-# 🛒 PDV Sistema — Node.js + MongoDB + Claude
+#  PDV Sistema — Node.js + MongoDB + Claude
 
 Sistema completo de Ponto de Venda com interface moderna, integrado ao MongoDB.
 
 ---
 
-## 📋 Requisitos
+##Requisitos
 
 - Node.js 18+
 - MongoDB 6+ (local ou Atlas)
 
 ---
 
-## 🚀 Instalação
+##Instalação
 
 ```bash
 # 1. Instalar dependências
@@ -30,7 +30,7 @@ http://localhost:3000
 
 ---
 
-## 🔑 Primeiro Acesso
+##Primeiro Acesso
 
 Execute este script para criar o usuário admin inicial:
 
@@ -44,7 +44,7 @@ Credenciais padrão:
 
 ---
 
-## ✨ Funcionalidades
+##Funcionalidades
 
 ### 🖥️ PDV (Ponto de Venda)
 - Busca por nome, código de barras ou departamento
@@ -56,31 +56,31 @@ Credenciais padrão:
 - Cálculo de troco automático
 - Indicador de caixa aberto/fechado em tempo real
 
-### 📦 Produtos
+### Produtos
 - Cadastro completo com código de barras obrigatório
 - Organização por departamento e categoria
 - Controle de estoque com alerta de estoque mínimo
 - Suporte a múltiplas unidades (UN, KG, LT, MT, CX, PC)
 - Edição e desativação de produtos
 
-### 💰 Caixa
+### Caixa
 - Abertura e fechamento de caixa com saldo
 - Registro de vendas e descontos
 - Histórico de operações
 
-### 📊 Vendas
+### Vendas
 - Dashboard com estatísticas do dia
 - Histórico completo de transações
 - Cancelamento de vendas com reversão de estoque
 
-### ⚙️ Configurações
+###  Configurações
 - Tema claro/escuro
 - 8 cores de destaque + cor personalizada
 - Gerenciamento de usuários (admin, gerente, operador)
 
 ---
 
-## 📁 Estrutura
+##  Estrutura
 
 ```
 pdv/
@@ -116,7 +116,7 @@ pdv/
 
 ---
 
-## 🔧 Variáveis de Ambiente
+##  Variáveis de Ambiente
 
 ```env
 PORT=3000
@@ -127,7 +127,7 @@ JWT_EXPIRES_IN=8h
 
 ---
 
-## 🔌 API Endpoints
+##  API Endpoints
 
 | Método | Rota | Descrição |
 | POST | /api/auth/login | Login |
