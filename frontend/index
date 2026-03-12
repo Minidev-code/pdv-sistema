@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDV Sistema</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="dark-mode">
+
+<!-- LOGIN PAGE -->
+<div id="page-login" class="page active">
+  <div class="login-bg">
+    <div class="login-grid"></div>
+    <div class="login-glow"></div>
+  </div>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon">⬡</div>
+        <h1 class="logo-text">PDV<span>SYS</span></h1>
+      </div>
+      <p class="login-subtitle">Sistema de Ponto de Venda</p>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="login-email" placeholder="operador@empresa.com" />
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="login-senha" placeholder="••••••••" />
+      </div>
+      <button class="btn-primary btn-full" onclick="handleLogin()">
+        <span>Entrar no Sistema</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <div id="login-error" class="alert-error hidden"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="page-app" class="page hidden">
+  
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-icon small">⬡</div>
+      <span class="sidebar-title">PDV<b>SYS</b></span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showSection('pdv')" data-section="pdv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <span>PDV</span>
+      </button>
+      <button class="nav-item" onclick="showSection('produtos')" data-section="produtos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        <span>Produtos</span>
+      </button>
+      <button class="nav-item" onclick="showSection('caixa')" data-section="caixa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        <span>Caixa</span>
+      </button>
+      <button class="nav-item" onclick="showSection('vendas')" data-section="vendas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Vendas</span>
+      </button>
+      <button class="nav-item" onclick="showSection('configuracoes')" data-section="configuracoes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        <span>Config</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar-sidebar">?</div>
+        <div>
+          <div class="user-name" id="sidebar-user-name">Usuário</div>
+          <div class="user-role" id="sidebar-user-role">operador</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()" title="Sair">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="caixa-status" id="caixa-status-badge">
+          <div class="status-dot"></div>
+          <span id="caixa-status-text">Verificando caixa...</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="clock" id="topbar-clock">00:00:00</div>
+        <div class="topbar-date" id="topbar-date"></div>
+      </div>
+    </div>
+
+    <!-- PDV SECTION -->
+    <section id="section-pdv" class="content-section active">
+      <div class="pdv-layout">
+        
+        <!-- Left: Search & Cart -->
+        <div class="pdv-left">
+          <div class="pdv-search-area">
+            <div class="search-bar-pdv">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="pdv-search" placeholder="Código de barras, nome do produto..." autofocus
+                onkeydown="handleSearchKeydown(event)" oninput="handleSearchInput(this.value)" />
+              <kbd>Enter</kbd>
+            </div>
+            <div class="dept-filter">
+              <button class="dept-btn active" onclick="filterDept(this, '')" data-dept="">Todos</button>
+            </div>
+            <div id="search-results" class="search-results hidden"></div>
+          </div>
+
+          <div class="cart-area">
+            <div class="cart-header">
+              <h2>Carrinho</h2>
+              <span class="cart-count" id="cart-count">0 itens</span>
+              <button class="btn-icon-sm" onclick="clearCart()" title="Limpar carrinho">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+              </button>
+            </div>
+            <div id="cart-items" class="cart-items">
+              <div class="cart-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                <p>Carrinho vazio</p>
+                <span>Busque produtos acima</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Payment Panel -->
+        <div class="pdv-right">
+          <div class="totals-panel">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span id="subtotal-display">R$ 0,00</span>
+            </div>
+            <div class="total-row discount-row">
+              <span>Desconto</span>
+              <div class="discount-input-wrap">
+                <span>R$</span>
+                <input type="number" id="desconto-input" value="0" min="0" step="0.01" onchange="updateTotals()" />
+              </div>
+            </div>
+            <div class="total-row grand-total">
+              <span>TOTAL</span>
+              <span id="total-display">R$ 0,00</span>
+            </div>
+          </div>
+
+          <div class="payment-section">
+            <h3>Forma de Pagamento</h3>
+            <div class="payment-methods">
+              <button class="pay-btn active" data-method="dinheiro" onclick="selectPayment(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+                Dinheiro
+              </button>
+              <button class="pay-btn" data-method="credito" onclick="selectPayment(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                Crédito
+              </button>
+              <button class="pay-btn" data-method="debito" onclick="selectPayment(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                Débito
+              </button>
+              <button class="pay-btn" data-method="pix" onclick="selectPayment(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                PIX
+              </button>
+            </div>
+
+            <div id="cash-change-panel" class="change-panel">
+              <div class="form-group">
+                <label>Valor recebido (R$)</label>
+                <input type="number" id="valor-recebido" placeholder="0,00" min="0" step="0.01" oninput="calcTroco()" />
+              </div>
+              <div class="troco-display">
+                <span>Troco</span>
+                <span id="troco-valor" class="troco-value">R$ 0,00</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-finalizar" id="btn-finalizar" onclick="finalizarVenda()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Finalizar Venda
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS SECTION -->
+    <section id="section-produtos" class="content-section hidden">
+      <div class="section-header">
+        <h2>Cadastro de Produtos</h2>
+        <button class="btn-primary" onclick="openModal('modal-produto')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Produto
+        </button>
+      </div>
+      <div class="filters-bar">
+        <input type="text" id="produtos-search" placeholder="Buscar produto..." oninput="loadProdutos()" />
+        <select id="produtos-dept-filter" onchange="loadProdutos()">
+          <option value="">Todos departamentos</option>
+        </select>
+      </div>
+      <div id="produtos-table" class="table-container">
+        <div class="loading-spinner">Carregando...</div>
+      </div>
+    </section>
+
+    <!-- CAIXA SECTION -->
+    <section id="section-caixa" class="content-section hidden">
+      <div class="section-header"><h2>Controle de Caixa</h2></div>
+      <div id="caixa-content"></div>
+    </section>
+
+    <!-- VENDAS SECTION -->
+    <section id="section-vendas" class="content-section hidden">
+      <div class="section-header"><h2>Histórico de Vendas</h2></div>
+      <div id="vendas-stats" class="stats-grid"></div>
+      <div id="vendas-table" class="table-container"></div>
+    </section>
+
+    <!-- CONFIG SECTION -->
+    <section id="section-configuracoes" class="content-section hidden">
+      <div class="section-header"><h2>Configurações</h2></div>
+      <div class="config-grid">
+        <div class="config-card">
+          <h3>Tema & Cores</h3>
+          <div class="theme-toggle">
+            <span>Modo</span>
+            <div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span id="theme-label">Escuro</span>
+          </div>
+          <div class="color-section">
+            <p>Cor de destaque</p>
+            <div class="color-palette">
+              <button class="color-swatch active" style="background:#00d4aa" onclick="setAccentColor('#00d4aa', this)" title="Verde Neon"></button>
+              <button class="color-swatch" style="background:#6c63ff" onclick="setAccentColor('#6c63ff', this)" title="Roxo"></button>
+              <button class="color-swatch" style="background:#ff6b6b" onclick="setAccentColor('#ff6b6b', this)" title="Coral"></button>
+              <button class="color-swatch" style="background:#ffd93d" onclick="setAccentColor('#ffd93d', this)" title="Amarelo"></button>
+              <button class="color-swatch" style="background:#4ecdc4" onclick="setAccentColor('#4ecdc4', this)" title="Turquesa"></button>
+              <button class="color-swatch" style="background:#ff9a3c" onclick="setAccentColor('#ff9a3c', this)" title="Laranja"></button>
+              <button class="color-swatch" style="background:#a8e6cf" onclick="setAccentColor('#a8e6cf', this)" title="Menta"></button>
+              <button class="color-swatch" style="background:#ff6eb4" onclick="setAccentColor('#ff6eb4', this)" title="Rosa"></button>
+            </div>
+            <div class="custom-color-wrap">
+              <label>Cor personalizada</label>
+              <input type="color" id="custom-color" value="#00d4aa" onchange="setAccentColor(this.value, null)" />
+            </div>
+          </div>
+        </div>
+
+        <div class="config-card">
+          <h3>Gerenciar Usuários</h3>
+          <button class="btn-primary" onclick="openModal('modal-usuario')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Novo Usuário
+          </button>
+          <div id="usuarios-list" class="usuarios-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- MODAL: Produto -->
+<div id="modal-produto" class="modal hidden">
+  <div class="modal-overlay" onclick="closeModal('modal-produto')"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-produto-title">Novo Produto</h3>
+      <button class="modal-close" onclick="closeModal('modal-produto')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="produto-id" />
+      <div class="form-grid-2">
+        <div class="form-group span-2">
+          <label>Nome do Produto *</label>
+          <input type="text" id="produto-nome" placeholder="Ex: Arroz Branco 5kg" />
+        </div>
+        <div class="form-group">
+          <label>Código de Barras *</label>
+          <input type="text" id="produto-barcode" placeholder="EAN-13 ou outro" />
+        </div>
+        <div class="form-group">
+          <label>Código Interno</label>
+          <input type="text" id="produto-codigo-interno" placeholder="Opcional" />
+        </div>
+        <div class="form-group">
+          <label>Departamento *</label>
+          <input type="text" id="produto-departamento" placeholder="Ex: Alimentos, Bebidas..." list="dept-list" />
+          <datalist id="dept-list"></datalist>
+        </div>
+        <div class="form-group">
+          <label>Categoria</label>
+          <input type="text" id="produto-categoria" placeholder="Subcategoria" />
+        </div>
+        <div class="form-group">
+          <label>Preço de Venda (R$) *</label>
+          <input type="number" id="produto-preco" placeholder="0,00" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Preço de Compra (R$)</label>
+          <input type="number" id="produto-preco-compra" placeholder="0,00" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Estoque Atual</label>
+          <input type="number" id="produto-estoque" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Estoque Mínimo</label>
+          <input type="number" id="produto-estoque-min" placeholder="5" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Unidade</label>
+          <select id="produto-unidade">
+            <option value="UN">Unidade (UN)</option>
+            <option value="KG">Quilograma (KG)</option>
+            <option value="LT">Litro (LT)</option>
+            <option value="MT">Metro (MT)</option>
+            <option value="CX">Caixa (CX)</option>
+            <option value="PC">Peça (PC)</option>
+          </select>
+        </div>
+        <div class="form-group span-2">
+          <label>Descrição</label>
+          <textarea id="produto-descricao" rows="2" placeholder="Descrição opcional..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-produto')">Cancelar</button>
+      <button class="btn-primary" onclick="saveProduto()">Salvar Produto</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Venda Finalizada -->
+<div id="modal-venda-ok" class="modal hidden">
+  <div class="modal-overlay" onclick="closeModal('modal-venda-ok')"></div>
+  <div class="modal-box modal-sm">
+    <div class="venda-ok-icon">✓</div>
+    <h3>Venda Finalizada!</h3>
+    <div id="venda-ok-details"></div>
+    <button class="btn-primary btn-full" onclick="closeModal('modal-venda-ok')">Nova Venda</button>
+  </div>
+</div>
+
+<!-- MODAL: Usuário -->
+<div id="modal-usuario" class="modal hidden">
+  <div class="modal-overlay" onclick="closeModal('modal-usuario')"></div>
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h3>Novo Usuário</h3>
+      <button class="modal-close" onclick="closeModal('modal-usuario')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Nome *</label>
+        <input type="text" id="user-nome" placeholder="Nome completo" />
+      </div>
+      <div class="form-group">
+        <label>E-mail *</label>
+        <input type="email" id="user-email" placeholder="email@empresa.com" />
+      </div>
+      <div class="form-group">
+        <label>Senha *</label>
+        <input type="password" id="user-senha" placeholder="Mínimo 6 caracteres" />
+      </div>
+      <div class="form-group">
+        <label>Perfil</label>
+        <select id="user-perfil">
+          <option value="operador">Operador</option>
+          <option value="gerente">Gerente</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-usuario')">Cancelar</button>
+      <button class="btn-primary" onclick="saveUsuario()">Criar Usuário</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pdv.js"></script>
+<script src="js/produtos.js"></script>
+<script src="js/caixa.js"></script>
+</body>
+</html>
